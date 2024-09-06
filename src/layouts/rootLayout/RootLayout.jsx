@@ -19,7 +19,7 @@
                     <img src="black.jpg" alt="" />
                     <span>ChatGenius</span>
                     </Link>
-                    <div className="user">User
+                    <div className="user">
                     <SignedOut>
                         <SignInButton />
                     </SignedOut>
