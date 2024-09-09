@@ -2,8 +2,18 @@ import './chatpage.css';
 
 const Chatpage = () => {
     return (
-        <div className='chatpage'>ChatPage</div>
-    );
-}
+        <div className="chatPage">
+          <div className="wrapper">
+            <div className="chat">
+              <div className="message">Test message</div>
+              <div className="message user">Test message from user</div>
+              <div className="message">Test message from AI</div>
+              <div className="message user">Test message from user</div>
+            </div>
+          </div>
+        </div>
+      );
+      
+};
 
 export default Chatpage;
