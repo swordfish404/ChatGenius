@@ -44,7 +44,7 @@ const Homepage = () => {
                 <img src="/black.jpg" alt="" />
                 <div className="links">
                     <Link to ="/">Made By</Link>
-                    <Link to="/"> Soumen Gharui</Link>
+                    <Link to="/"> Swordfish</Link>
                 </div>
             </div>
         </div>
