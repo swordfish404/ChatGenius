@@ -16,7 +16,7 @@
                 <div className='rootLayout'>
                 <header>
                     <Link to="/" className="logo">
-                    <img src="black.jpg" alt="" />
+                    <img src="/black.jpg" alt="" />
                     <span>ChatGenius</span>
                     </Link>
                     <div className="user">

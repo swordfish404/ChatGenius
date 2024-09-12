@@ -39,7 +39,7 @@ const ChatList = () => {
                   <hr/>
               
               <div className="upgrade">
-                <img src="/logo.png" alt="" />
+                <img src="/black.jpg" alt="" />
                 <div className="texts">
                     <span>Upgrade Yourself</span>
                     <span>By using the power of ChatGenius</span>

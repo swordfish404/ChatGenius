@@ -11,6 +11,7 @@
     width: 100%;
     display: flex;
     justify-content: center;
+    scrollbar-width: none;
 
     .chat{
       width: 50%;
