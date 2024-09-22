@@ -4,6 +4,8 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import chat from './models/chat.js';
 import userChats from './models/userChats.js';
+import 'dotenv/config' ;// To read CLERK_SECRET_KEY and CLERK_PUBLISHABLE_KEY
+import { ClerkExpressRequireAuth } from '@clerk/clerk-sdk-node';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -43,8 +45,15 @@ app.get('/api/upload', (req, res) => {
   res.send(result);
 });
 
+// for testing
+app.get("/api/test",ClerkExpressRequireAuth(),(req,res)=>{
+  console.log("success")
+  res.send("Success!")
+});
+
+
 // API request to handle chat creation
-app.post("/api/chats", async (req, res) => {
+app.post("/api/chats",ClerkExpressRequireAuth({}), async (req, res) => {
   const { userId, text } = req.body;
 
   // Log request body to check data
@@ -92,12 +101,19 @@ app.post("/api/chats", async (req, res) => {
       );
     }
 
-    res.status(201).send(savedChat._id);
+    res.status(201).send(newChat._id);
   } catch (err) {
     console.log(err);
     res.status(500).send("Error creating chat! Check logs.");
   }
 });
+
+// error handler from clerk
+app.use((err, req, res, next) => {
+  console.error(err.stack)
+  res.status(401).send('Unauthenticated!')
+})
+
 
 // Start the server
 app.listen(port, () => {

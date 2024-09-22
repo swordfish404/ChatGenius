@@ -12,11 +12,13 @@ const Dashboard = () => {
     if(!text) return;
     await fetch("http://localhost:3000/api/chats", {
       method: "POST",
+      credentials: "include",  // Removed the leading space here
       headers: {
-        "Content-Type": "application/json"  // Correct header format
+        "Content-Type": "application/json"
       },
-      body: JSON.stringify({ userId,text }),  // Correct body formatting
+      body: JSON.stringify({ userId, text }),
     });
+    
     
   };
 

@@ -1,9 +1,17 @@
-import { TypeAnimation } from 'react-type-animation';
+// import { TypeAnimation } from 'react-type-animation';
 import './homepage.css';
 import { Link } from "react-router-dom";
+// import {useState} from "react";
+
 
 
 const Homepage = () => {
+    // const [typingStatus,setTypingStatus]=useState("human1");
+    const test= async() =>{
+        await fetch("http://localhost:3000/api/test",{
+            credentials:"include",
+        });
+    };
     return (
         <div className='homepage'>
           <img src="/orbital.png" alt="" className="orbital"/>
@@ -12,6 +20,9 @@ const Homepage = () => {
                 <h2>Supercharge your creativity and productivity</h2>
                 <h3>ChatGenius is an AI assistant that gives you direct access to Google’s best family of AI models on your device. Get help learning in new ways, planning events, writing thank you notes, and more.</h3>
                 <Link to="/dashboard">Get Started</Link>
+
+                {/* for testing  */}
+                <button onClick={test}> Test back end</button>
             </div>
             <div className="right">
                 <div className="imgContainer">
