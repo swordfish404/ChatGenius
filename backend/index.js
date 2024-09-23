@@ -2,10 +2,14 @@ import express from 'express';
 import ImageKit from 'imagekit';
 import cors from 'cors';
 import mongoose from 'mongoose';
-import chat from './models/chat.js';
-import userChats from './models/userChats.js';
+// import chat from './models/chat.js';
+// import userChats from './models/userChats.js';
 import 'dotenv/config' ;// To read CLERK_SECRET_KEY and CLERK_PUBLISHABLE_KEY
 import { ClerkExpressRequireAuth } from '@clerk/clerk-sdk-node';
+import userChats from './models/userChats.js';
+import chat from './models/chat.js';
+
+
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -46,15 +50,17 @@ app.get('/api/upload', (req, res) => {
 });
 
 // for testing
-app.get("/api/test",ClerkExpressRequireAuth(),(req,res)=>{
-  console.log("success")
-  res.send("Success!")
-});
+// app.get("/api/test",ClerkExpressRequireAuth(),(req,res)=>{
+//   const userId=req.auth.userId;
+//   console.log(userId);
+//   res.send("Success!");
+// });
 
 
 // API request to handle chat creation
 app.post("/api/chats",ClerkExpressRequireAuth({}), async (req, res) => {
-  const { userId, text } = req.body;
+  const userId=req.auth.userId;
+  const {text } = req.body;
 
   // Log request body to check data
   console.log("Request body:", req.body);
@@ -107,6 +113,40 @@ app.post("/api/chats",ClerkExpressRequireAuth({}), async (req, res) => {
     res.status(500).send("Error creating chat! Check logs.");
   }
 });
+
+
+// creating one endpoint again
+app.get("/api/userchats", ClerkExpressRequireAuth(), async (req, res) => {
+  const userId = req.auth.userId;
+  try {
+    const userChatsData = await userChats.find({ userId }); // Renamed to avoid conflict
+    if (userChatsData.length === 0) {
+      return res.status(200).send([]); // Send an empty array if no chats exist
+    }
+    res.status(200).send(userChatsData[0].chats);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Error retrieving user chats!");
+  }
+});
+
+// creating another end point
+app.get("/api/chats/:id", ClerkExpressRequireAuth(), async (req, res) => {
+  const userId = req.auth.userId;
+
+  try {
+    const Chat = await chat.findOne({ _id: req.params.id, userId });
+    // console.log(chat)8563
+
+    res.status(200).send(Chat);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Error fetching chat!");
+  }
+});
+
+
+
 
 // error handler from clerk
 app.use((err, req, res, next) => {
