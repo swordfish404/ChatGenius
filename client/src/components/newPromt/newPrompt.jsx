@@ -6,41 +6,34 @@ import model from "../../lib/gemini";
 import Markdown from "react-markdown";
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-const NewPrompt = ({data}) => {
-    const [question, setQuestion] = useState("");  
-    const [answer, setAnswer] = useState("");     
-    const [img, setImg] = useState({
-        isLoading: false,
-        error: "",
-        dbData: {},
-        aiData: {},    
-    });
+const NewPrompt = ({ data }) => {
+  const [question, setQuestion] = useState("");  
+  const [answer, setAnswer] = useState("");     
+  const [img, setImg] = useState({
+    isLoading: false,
+    error: "",
+    dbData: {},
+    aiData: {},    
+  });
 
   const chat = model.startChat({
-  history: [
-    {
-      role: "user",
-      parts: [{ text: "Hello" }],
+    history: data?.history.map(({ role, parts }) => ({
+      role,
+      parts: [{ text: parts[0].text }],
+    })),
+    generationConfig: {
+      //maxOutputToken: 100,
     },
-    {
-      role: "model",
-      parts: [{ text: "Great to meet you. What would you like to know?" }],
-    },
-  ],
-  generationConfig:{
-    //maxOutputToken: 100,
-  },
-});
+  });
 
-    const endRef = useRef(null);
-    const formRef= useRef(null);
+  const endRef = useRef(null);
+  const formRef = useRef(null);
 
-    useEffect(() => {
-        endRef.current.scrollIntoView({ behavior: "smooth" });
-    }, [data,question, answer, img.dbData]);
+  useEffect(() => {
+    endRef.current.scrollIntoView({ behavior: "smooth" });
+  }, [data, question, answer, img.dbData]);
 
-
-    const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
 
   const mutation = useMutation({
     mutationFn: () => {
@@ -77,7 +70,6 @@ const NewPrompt = ({data}) => {
     },
   });
 
-
   const add = async (text, isInitial) => {
     if (!isInitial) setQuestion(text);
 
@@ -99,52 +91,52 @@ const NewPrompt = ({data}) => {
     }
   };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-        const text = e.target.text.value;
-        if (!text) return;
+    const text = e.target.text.value;
+    if (!text) return;
 
-        add(text,false);
-    };
-// in production we dont need it
-   const hasRun=useRef(false) 
+    add(text, false);
+  };
 
-useEffect(()=>{
-    if(!hasRun.current){
+  // In production we don't need it
+  const hasRun = useRef(false);
 
-    if(data?.history?.length==1){
+  useEffect(() => {
+    if (!hasRun.current) {
+      if (data?.history?.length === 1) {
         add(data.history[0].parts[0].text, true);
+      }
+      hasRun.current = true;
     }
-  }
-  hasRun.current=true; 
-},[]);
+  }, [data]);
 
-    return (
-        <>
-            {img.isLoading && <div>Loading.....</div>}
-            {img.dbData?.filePath && (
-                <IKImage
-                    urlEndpoint={import.meta.env.VITE_IMAGE_KIT_ENDPOINT}
-                    path={img.dbData?.filePath}
-                    width="380"
-                    transformation={[{ width: 380 }]}
-                />
-            )}
-            {question && <div className='message user'>{question}</div>}
-            {answer && <div className='message'><Markdown>{answer}</Markdown></div>} 
+  return (
+    <>
+      {img.isLoading && <div>Loading.....</div>}
+      {img.dbData?.filePath && (
+        <IKImage
+          urlEndpoint={import.meta.env.VITE_IMAGE_KIT_ENDPOINT}
+          path={img.dbData?.filePath}
+          width="380"
+          transformation={[{ width: 380 }]}
+        />
+      )}
+      {question && <div className='message user'>{question}</div>}
+      {answer && <div className='message'><Markdown>{answer}</Markdown></div>} 
 
-            <div className='endChat' ref={endRef}></div>
-            <form className='newForm' onSubmit={handleSubmit} ref={formRef}>
-                <Upload setImg={setImg} />
-                <input id="file" type="file" multiple={false} hidden />
-                <input type="text" name="text" placeholder='Ask anything....' />
-                <button type="submit">
-                    <img src="/arrow.png" alt="Submit" />
-                </button>
-            </form>
-        </>
-    );
+      <div className='endChat' ref={endRef}></div>
+      <form className='newForm' onSubmit={handleSubmit} ref={formRef}>
+        <Upload setImg={setImg} />
+        <input id="file" type="file" multiple={false} hidden />
+        <input type="text" name="text" placeholder='Ask anything....' />
+        <button type="submit">
+          <img src="/arrow.png" alt="Submit" />
+        </button>
+      </form>
+    </>
+  );
 };
 
 export default NewPrompt;
