@@ -47,7 +47,7 @@ const Chatpage = () => {
             </div>
              </>
           ))}
-          <NewPrompt />
+          <NewPrompt data={data}/>
         </div>
       </div>
     </div>
