@@ -107,7 +107,7 @@ const NewPrompt = ({data}) => {
 
         add(text,false);
     };
-
+// in production we dont need it
    const hasRun=useRef(false) 
 
 useEffect(()=>{
