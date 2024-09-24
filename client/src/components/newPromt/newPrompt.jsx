@@ -105,8 +105,20 @@ const NewPrompt = ({data}) => {
         const text = e.target.text.value;
         if (!text) return;
 
-        add(text);
+        add(text,false);
     };
+
+   const hasRun=useRef(false) 
+
+useEffect(()=>{
+    if(!hasRun.current){
+
+    if(data?.history?.length==1){
+        add(data.history[0].parts[0].text, true);
+    }
+  }
+  hasRun.current=true; 
+},[]);
 
     return (
         <>
